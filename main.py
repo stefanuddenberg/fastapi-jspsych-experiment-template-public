@@ -58,10 +58,16 @@ experiment_configuration_dict = dict(
     close_tags=settings.close_tags,
     logrocket_id=settings.logrocket_id,
     intertrial_interval=settings.intertrial_interval,
+    image_dir=settings.image_dir,
+    example_image_dir=settings.example_image_dir,
+    num_stimuli=settings.num_stimuli,
     stimulus_width=settings.stimulus_width,
     stimulus_height=settings.stimulus_height,
     slider_width=settings.slider_width,
-    num_stimuli=settings.num_stimuli,
+    show_slider_delay=settings.show_slider_delay,
+    reading_speed=settings.reading_speed,
+    percent_repeats=settings.percent_repeats,
+    min_gap_between_repeats=settings.min_gap_between_repeats,
 )
 
 app_name = settings.app_name
@@ -277,22 +283,6 @@ def initialize_experiment(
             f"Participant {participant_in.worker_id} already exists; returning that one."
         )
         experiment_configuration = ExperimentConfiguration(
-            # debug_mode=settings.debug_mode,
-            # estimated_task_duration=settings.estimated_task_duration,
-            # compensation=settings.compensation,
-            # experiment_title=settings.experiment_title,
-            # experiment_name=settings.experiment_name,
-            # version_date=settings.version_date,
-            # open_tags=settings.open_tags,
-            # close_tags=settings.close_tags,
-            # logrocket_id=settings.logrocket_id,
-            # intertrial_interval=settings.intertrial_interval,
-            # stimulus_width=settings.stimulus_width,
-            # stimulus_height=settings.stimulus_height,
-            # slider_width=settings.slider_width,
-            # num_stimuli=settings.num_stimuli,
-            # percent_repeats=settings.percent_repeats,
-            # min_gap_between_repeats=settings.min_gap_between_repeats,
             **experiment_configuration_dict,
             **existing_participant.dict(),
         )

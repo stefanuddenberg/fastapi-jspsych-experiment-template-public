@@ -1,25 +1,20 @@
 import "lodash";
 
 export function getStimuli({
-  image_dir = "src/images",
-  num_stimuli = 2,
+  stimulus_df,
+  image_dir = "src/images/main/",
+  num_stimuli = 300,
+  prefix = "",
   extension = ".jpg",
 }) {
-  return _.map(
-    _.range(1, num_stimuli + 1),
-    (i) => `${image_dir}/${i}${extension}`,
-  );
-}
+  const possible_stimuli = stimulus_df.select("stimulus").toArray();
 
-export function getMorphStimuli({
-  image_dir = "src/images/06F-21M/disgust",
-  condition = "disgust",
-  num_stimuli = 61,
-  extension = ".jpg",
-}) {
-  return _.map(
-    _.range(1, num_stimuli + 1),
-    (i) =>
-      `${image_dir}/${condition}_${i.toString().padStart(2, "0")}${extension}`,
-  );
+  const main_stimulus_numbers = possible_stimuli.slice(0, num_stimuli);
+
+
+  return {
+    main_stimuli: main_stimulus_numbers.map(
+      (i) => `${image_dir}${prefix}${i}${extension}`,
+    ),
+  };
 }

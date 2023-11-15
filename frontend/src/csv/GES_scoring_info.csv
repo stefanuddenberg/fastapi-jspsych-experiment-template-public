@@ -1,0 +1,14 @@
+﻿index,prompt,is_reverse_scored
+0,"On average, men are less expressive than women",FALSE
+1,"On average, women experience more emotions than men",FALSE
+2,"On average, men experience fewer emotions than women",FALSE
+3,"On average, women smile more often than men",FALSE
+4,"On average, men cry less than women",FALSE
+5,Men experience anger more often than women,FALSE
+6,Men experience fear more often than women,TRUE
+7,Men experience anger less often than women,TRUE
+8,Men experience fear less often than women,FALSE
+9,Women experience anger more often than men,TRUE
+10,Women experience fear more often than men,FALSE
+11,Women experience anger less often than men,FALSE
+12,Women experience fear less often than men,FALSE

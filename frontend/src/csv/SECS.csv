@@ -1,0 +1,13 @@
+﻿Index,Prompt,Category,isReverseScored
+0,Abortion,Social,TRUE
+1,Limited government,Economic,FALSE
+2,Military and national security,Social,FALSE
+3,Religion,Social,FALSE
+4,Welfare benefits,Economic,TRUE
+5,Gun ownership,Economic,FALSE
+6,Traditional marriage,Social,FALSE
+7,Traditional values,Social,FALSE
+8,Fiscal responsibility,Economic,FALSE
+9,Business,Economic,FALSE
+10,The family unit,Social,FALSE
+11,Patriotism,Social,FALSE

@@ -116,12 +116,22 @@ class ExperimentConfiguration(SQLModel):
     version_date: str = "2023-10-21"
     open_tags: str = "[["
     close_tags: str = "]]"
+    intertrial_interval: int = 100
+    slider_width: int = 600
+    slider_amount_visible: bool = False
+    show_slider_delay: int = 500
+    reading_speed: int = 0  # no delay if 0
     stimulus_width: int = 400
-    num_stimuli: int = 2
+    stimulus_height: int = 400
+    num_stimuli: int = 300
+    percent_repeats: int = 10
+    min_gap_between_repeats: int = 5
+    image_dir: str = "images/main/"
+    example_image_dir: str = "images/examples/"
+
     logrocket_id: str
+    extension: str = ".jpg"
     intertrial_interval: int
-    stimulus_height: int
-    slider_width: int
 
 
 Participant.update_forward_refs()

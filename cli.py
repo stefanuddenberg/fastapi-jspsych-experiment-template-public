@@ -1,8 +1,6 @@
 # TODO: export database to csv? can get from db browser already...
 
-import ast
 import os
-import sqlite3
 import subprocess
 from pathlib import Path
 
@@ -13,7 +11,7 @@ import uvicorn
 from sqlmodel import Session, SQLModel
 
 import config
-from models import Data, Participant
+from models import Participant, Data
 
 settings = config.Settings()
 TABLE_NAMES = ["participant", "data"]
@@ -62,8 +60,8 @@ def debug():
     run()
 
 
-def export(remote=True):
-    conn = psycopg2.connect(settings.database_url) if remote else sqlite3.connect("database.db")
+def export():
+    conn = psycopg2.connect(settings.database_url)
     for table_name in TABLE_NAMES:
         df = pd.read_sql(f"SELECT * from {table_name}", conn)
         df.to_csv(DATA_DIR / f"{table_name}.csv", index=False)

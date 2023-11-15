@@ -12,8 +12,6 @@ class Settings(BaseSettings):
     # Private settings -- not seen by frontend
     app_name: str = "FastAPI Face Ratings"
     database_url: str = f"sqlite:///{os.path.join(BASE_DIR, 'database.db')}"
-    num_images: int = 1  # = 10
-    images_per_subject: int = 1  # = 5
     shuffle: bool = True
     allotted_time: int = 3600  # in seconds
     refresh_time: int = 300  # in seconds
@@ -31,13 +29,19 @@ class Settings(BaseSettings):
     version_date: str = "2023-10-21"
     open_tags: str = "[["
     close_tags: str = "]]"
+    slider_width: int = 600
+    slider_amount_visible: bool = False
     stimulus_width: int = 400
-    num_stimuli: int = 2
+    stimulus_height: int = 400
+    num_stimuli: int = 300
+    percent_repeats: int = 10
+    min_gap_between_repeats: int = 5
+    image_dir: str = "images/main/"
+    example_image_dir: str = "images/examples/"
     logrocket_id: str = "my-cool-experiment"
     intertrial_interval: int = 100
-    stimulus_height: int = 400
-    stimulus_width: int = 400
-    slider_width: int = 600
+    reading_speed: int = 0
+    show_slider_delay: int = 500
 
     class Config:
         env_file = ".env"

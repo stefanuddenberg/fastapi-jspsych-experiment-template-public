@@ -1,85 +1,120 @@
-export function generateRatingTrials({
-  stimuli,
-  type = "image-slider-response",
-  stimulus_width = 400,
-  slider_width = 600,
+export function generateSingleStimulusRevCorTrials({
+  main_stimuli,
+  percent_repeats = 10,
+  min_gap_between_repeats = 5,
+  type = "single-stim-rev-cor-trial",
+  choices = ["f", "space", "j"],
+  choice_labels = ["female", "not sure", "male"],
+  stimulus_width = 256,
+  stimulus_height = 256,
   condition = "XXX",
-  labels = ["Not at all XXX", "Extremely XXX"],
-  prompt = `<h1 class="text-center mt-2 mb-4">How XXX is this face?</h1>`,
-  experiment_phase = "practice",
-  slider_amount_visible = true,
-  show_slider_delay = 500,
-  post_trial_gap = 500,
-  response_ends_trial = true,
+  preamble = `<p class="instructions text-left my-2"> my cool preamble </p>`,
+  prompt = `<h1 class="text-center mt-2 mb-4">Which of these faces looks more like XXX?</h1>`,
+  post_trial_gap = 0,
+  shuffle = true,
 }) {
-  return _.map(stimuli, (stimulus) => {
+  // Validation checks
+  if (percent_repeats < 0 || percent_repeats > 100) {
+    throw new Error("percent_repeats must be between 0 and 100");
+  }
+
+  if (min_gap_between_repeats >= main_stimuli.length) {
+    throw new Error("min_gap_between_repeats must be less than the total number of unique trials");
+  }
+  let trials = [];
+
+  let unique_trials = main_stimuli.map((stimulus) => {
     return {
       type,
-      stimulus_width,
-      slider_width,
-      post_trial_gap,
       stimulus,
-      labels,
+      choices,
+      choice_labels,
+      stimulus_width,
+      stimulus_height,
+      preamble,
       prompt,
-      response_ends_trial,
-      slider_amount_visible,
-      show_slider_delay,
+      post_trial_gap,
       data: {
         condition,
-        experiment_phase,
+        experiment_phase: "main",
+        image_shown_count: 1,
+        repeat: false,
       },
     };
   });
-}
 
-export function generateDescriptionTrials({
-  stimuli = [],
-  trial_type = "face-description-trial",
-  stimulus_width = 400,
-  preamble = `<p class="text-center mt-2 mb-5 h3">
-  Please write everything that comes to mind about this image.<br>
-  Describe it as completely as you can.
-  </p>`,
-  questions = [
-    {
-      prompt: undefined,
-      placeholder: "Enter your description here",
-      rows: 6,
-      columns: 40,
-      required: true,
-      name: "description"
-    }
-  ],
-  response_ends_trial = true,
-  condition = undefined,
-  experiment_phase = "main",
-  post_trial_gap = 100,
-}) {
+  if (shuffle) unique_trials = _.shuffle(unique_trials);
 
-  if (stimuli.length === 0) {
-    throw new Error("No stimuli provided!");
-  }
-
-  let trials = [];
-
-  for (const stimulus of stimuli) {
-    const this_trial = {
-      type: trial_type,
-      image: `<img src="${stimulus}" alt="image" class="mb-5" style="width: ${stimulus_width}px;">`,
-      preamble,
-      questions,
-      response_ends_trial,
+  // Select a random `percent_repeats` percentage of main trials to be repeated
+  const num_repeat_stimuli = Math.floor((percent_repeats / 100) * unique_trials.length);
+  const repeat_trials = _.shuffle(
+    _.sampleSize(
+      unique_trials.slice(
+        0,
+        unique_trials.length - min_gap_between_repeats,
+      ),
+      num_repeat_stimuli,
+    ).map((t) => ({
+      ...t,
       data: {
-        condition,
-        experiment_phase,
-        stimulus,
+        ...t.data,
+        experiment_phase: "main_repeat",
+        image_shown_count: 2,
+        repeat: true,
       },
-      post_trial_gap,
-    };
-    trials.push(this_trial);
+    })),
+  )
+
+  trials = [...unique_trials];
+
+  for (const r of repeat_trials) {
+    const matching_trial_index = _.findIndex(
+      trials,
+      (u) => u.stimulus === r.stimulus && !u.data.repeat,
+    );
+    const remaining_trial_indexes = _.range(
+      matching_trial_index + min_gap_between_repeats,
+      trials.length,
+    );
+    const splice_location = _.sample(remaining_trial_indexes);
+    trials.splice(splice_location, 0, r);
   }
 
-  trials = _.shuffle(trials);
+  console.log("all trials before splicing:", [
+    ...unique_trials,
+    ...repeat_trials,
+  ]);
+
+  console.log("all trials after splicing:", trials);
+
+  console.log("Confirm that all repeats come after all non-repeats:");
+  for (const r of repeat_trials) {
+    const nonrepeat_index = _.findIndex(
+      trials,
+      (u) => u.stimulus === r.stimulus && !u.data.repeat,
+    );
+
+    const repeat_index = _.findIndex(
+      trials,
+      (u) => u.stimulus === r.stimulus && u.data.repeat,
+    );
+
+    if (nonrepeat_index > repeat_index)
+      console.error(
+        `nonrepeat for ${r.stimulus} at ${nonrepeat_index} comes after repeat at ${repeat_index}!`,
+      );
+
+    if (repeat_index - nonrepeat_index < min_gap_between_repeats)
+      console.error(
+        `repeat for ${r.stimulus} at ${repeat_index} comes only ${repeat_index - nonrepeat_index
+        } items after first showing at ${nonrepeat_index}!`,
+      );
+  }
+
+  // Add trial numbers
+  trials = trials.map((t, i) => ({ ...t, trial_number: i }));
+  // Log all the repeat trials as they appear in the trials array
+  console.log("repeat trials:", trials.filter((t) => t.data.repeat));
 
   return trials;
 }
