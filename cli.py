@@ -1,6 +1,5 @@
-# TODO: export database to csv? can get from db browser already...
-
 import os
+import ast
 import subprocess
 from pathlib import Path
 
