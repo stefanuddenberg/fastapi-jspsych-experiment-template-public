@@ -9,6 +9,7 @@ Simple generic experiment template using FastAPI, SQLModel, and jspsych.
 4. Install required packages: `pip install -r requirements.txt`
 5. Initialize/reset the local database: `python cli.py reset_db`
 6. Install frontend packages: `python cli.py install_packages` OR from within `frontend/`: `npm i`
+7. In the `frontend/` folder, add a blank `client.env` file, just to get it to work for now
 
 ## Set the environment variables
 This should be done locally in a `.env` file. If using a deployment on Railway, can be done online via their GUI.
